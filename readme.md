@@ -396,6 +396,7 @@ Mock modules or globals imported anywhere in the source tree.
 
 - [testtriple](https://github.com/VanCoding/testtriple) - A handy little mocking library.
 - [testdouble.js](https://github.com/testdouble/testdouble.js) - A minimal test double library for TDD with JavaScript.
+- [tinyspy](https://github.com/tinylibs/tinyspy) - A minimal fork of nanospy, with more features. Also tracks spy returns.
 - [@fluffy-spoon/substitute](https://github.com/ffMathy/FluffySpoon.JavaScript.Testing.Faking) - A TypeScript port of NSubstitute.
 - [Sinon](https://github.com/sinonjs/sinon) - Standalone and test framework agnostic JavaScript test spies, stubs and mocks.
 - [esmock](https://github.com/iambumblehead/esmock) - ESM import and globals mocking for unit tests.
