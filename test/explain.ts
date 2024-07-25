@@ -10,6 +10,7 @@ test("gets details of a spy", t => {
 		callCount: 0,
 		called: false,
 		calls: [],
+		flatCalls: [],
 	});
 
 	fn(1, 2);
@@ -22,6 +23,7 @@ test("gets details of a spy", t => {
 			{ arguments: [1, 2] },
 			{ arguments: [3, 4] },
 		],
+		flatCalls: [1, 2, 3, 4],
 	});
 });
 
@@ -48,11 +50,13 @@ test("tracks calls to the same function separately", t => {
 		callCount: 1,
 		called: true,
 		calls: [{ arguments: [1, 2] }],
+		flatCalls: [1, 2],
 	});
 
 	t.like(explain(fn2), {
 		callCount: 1,
 		called: true,
 		calls: [{ arguments: [3, 4] }],
+		flatCalls: [3, 4],
 	});
 });

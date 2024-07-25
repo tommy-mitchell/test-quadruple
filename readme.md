@@ -67,6 +67,11 @@ test("test-quadrule", async t => {
       { arguments: ["lorem ipsum"] },
       { arguments: ["buzz"] },
     ],
+    flatCalls: [
+      "Hello, world!",
+      "lorem ipsum",
+      "buzz",
+    ],
   });
 });
 ```
@@ -221,6 +226,7 @@ test("tracks calls of a spy", async t => {
     callCount: 1,
     called: true,
     calls: [{ arguments: [1, 2] }],
+    flatCalls: [1, 2],
   });
 });
 ```
@@ -257,6 +263,12 @@ Whether or not the given spy was called.
 Type: `Array<{ arguments: unknown[] }>`
 
 An array of calls to the given spy.
+
+##### flatCalls
+
+Type: `unknown[]`
+
+A flattened array of calls to the given spy.
 
 ## Fakes
 

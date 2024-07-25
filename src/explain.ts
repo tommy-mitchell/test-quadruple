@@ -7,6 +7,8 @@ export type Explanation = {
 	called: boolean;
 	/** An array of calls to the given spy. */
 	calls: FunctionCall[];
+	/** A flattened array of calls to the given spy. */
+	flatCalls: unknown[];
 };
 
 /**
@@ -28,6 +30,7 @@ export type Explanation = {
  *     callCount: 1,
  *     called: true,
  *     calls: [{ arguments: [1, 2] }],
+ *     flatCalls: [1, 2],
  *   });
  * });
  */
@@ -38,9 +41,12 @@ export const explain = (fn: AnyFunction): Explanation => {
 		throw new TypeError(`Function "${fn.name || "anonymous"}" is not a spy`);
 	}
 
+	const args = calls.map(call => call.arguments);
+
 	return {
 		callCount: calls.length,
 		called: calls.length > 0,
 		calls,
+		flatCalls: args.flat(Number.POSITIVE_INFINITY),
 	};
 };
