@@ -1,5 +1,5 @@
 import { expectAssignable, expectType } from "tsd";
-import * as tq from "../src/index.js";
+import * as tq from "test-quadruple";
 
 declare const anyFunction: tq.AnyFunction;
 
