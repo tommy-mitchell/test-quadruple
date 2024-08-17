@@ -3,9 +3,11 @@ import type { PartialDeep as PartialDeepInternal } from "type-fest";
 
 type UnknownRecord = Record<string, unknown>;
 
-type PartialDeep<ObjectType extends UnknownRecord> = {
+type PartialDeep<ObjectType> = {
 	[KeyType in keyof ObjectType]?: PartialDeepInternal<ObjectType[KeyType], { recurseIntoArrays: true; }>;
 };
+
+type PartialMock<MockType> = MockType extends UnknownRecord ? PartialDeep<MockType> : Partial<MockType>;
 
 /**
  * Partially mocks an object.
@@ -34,8 +36,8 @@ type PartialDeep<ObjectType extends UnknownRecord> = {
  *   },
  * }));
  */
-export const mock = <MockType extends UnknownRecord>(object: PartialDeep<MockType> = {}): MockType => (
-	mapObject(object as UnknownRecord, (key, value) => [
+export const mock = <MockType>(object?: PartialMock<MockType>): MockType => (
+	mapObject(object ?? {}, (key, value) => [
 		key,
 		typeof value === "function" // Define function name if missing
 			? Object.defineProperty(value, "name", { value: key })

@@ -47,3 +47,10 @@ expectType<Human>(tq.mock<Human>({
 		getAge: () => 42,
 	}],
 }));
+
+// Works with types without string indices
+
+expectType<MediaQueryList>(tq.mock<MediaQueryList>({
+	matches: false,
+	onchange: null,
+}));
