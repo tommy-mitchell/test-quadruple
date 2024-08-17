@@ -1,8 +1,8 @@
 import test from "ava";
 import { match, P } from "ts-pattern";
 import * as tq from "../src/index.js";
-import { bar as originalBar } from "./fixtures/imports/fixture.js";
 import { atFixture } from "./_util.js";
+import { bar as originalBar } from "./fixtures/imports/fixture.js";
 
 test("replaces a module", async t => {
 	const logger = tq.spy();

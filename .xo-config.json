@@ -1,7 +1,11 @@
 {
 	"$schema": "https://json.schemastore.org/eslintrc.json",
-	"extends": ["@tommy-mitchell/xo"],
+	"extends": ["@tommy-mitchell/xo", "@tommy-mitchell/xo/dprint"],
 	"rules": {
-		"unicorn/prevent-abbreviations": "off"
+		"perfectionist/sort-objects": "off",
+		"perfectionist/sort-object-types": "off",
+		"simple-import-sort/imports": ["error", {
+			"groups": [["^\\u0000", "^node:", "^tsd", "^@?\\w", "^", "^\\."]]
+		}]
 	}
 }

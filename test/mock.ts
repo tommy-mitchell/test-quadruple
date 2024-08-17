@@ -1,7 +1,7 @@
 import test from "ava";
+import { returns } from "../src/fakes.js";
 import { mock } from "../src/mock.js";
 import { spy } from "../src/spy.js";
-import { returns } from "../src/fakes.js";
 
 type Person = {
 	name: string;
