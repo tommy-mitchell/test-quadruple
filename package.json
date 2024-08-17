@@ -38,7 +38,7 @@
 		"dist"
 	],
 	"engines": {
-		"node": "^18.18 || ^20.8 || >=21"
+		"node": "^18.19 || ^20.8 || >=21"
 	},
 	"scripts": {
 		"prepare": "npm run build",
