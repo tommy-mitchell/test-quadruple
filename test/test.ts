@@ -1,8 +1,8 @@
 import test from "ava";
 import { match, P } from "ts-pattern";
-import * as tq from "../src/index.js";
-import { atFixture } from "./_util.js";
-import { bar as originalBar } from "./fixtures/imports/fixture.js";
+import * as tq from "../src/index.ts";
+import { atFixture } from "./_util.ts";
+import { bar as originalBar } from "./fixtures/imports/fixture.ts";
 
 test("replaces a module", async t => {
 	const logger = tq.spy();
@@ -11,7 +11,6 @@ test("replaces a module", async t => {
 		modulePath: atFixture("cli"),
 		importMeta: import.meta,
 		localMocks: {
-			// eslint-disable-next-line @typescript-eslint/naming-convention
 			"node:process": {
 				exit: tq.noop(),
 			},
@@ -42,7 +41,7 @@ test("with args pattern", async t => {
 		modulePath: atFixture("imports"),
 		importMeta: import.meta,
 		localMocks: {
-			"./bar.js": { // eslint-disable-line @typescript-eslint/naming-convention
+			"./bar.js": {
 				bar: tq.spy(args => (
 					match(args)
 						.with(P.string, tq.returns("string"))

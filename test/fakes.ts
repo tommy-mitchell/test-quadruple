@@ -1,5 +1,5 @@
 import test from "ava";
-import * as fakes from "../src/fakes.js";
+import * as fakes from "../src/fakes.ts";
 
 test("returns", t => {
 	const fn = fakes.returns(1);

@@ -1,6 +1,6 @@
-export * from "./explain.js";
-export * from "./fakes.js";
-export * from "./mock.js";
-export * from "./replace.js";
-export * from "./spy.js";
-export type { AnyFunction, FunctionCall } from "./store.js";
+export * from "./explain.ts";
+export * from "./fakes.ts";
+export * from "./mock.ts";
+export * from "./replace.ts";
+export * from "./spy.ts";
+export type { AnyFunction, FunctionCall } from "./store.ts";

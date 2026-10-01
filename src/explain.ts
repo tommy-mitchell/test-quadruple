@@ -1,4 +1,4 @@
-import { type AnyFunction, type FunctionCall, getCalls } from "./store.js";
+import { type AnyFunction, type FunctionCall, getCalls } from "./store.ts";
 
 export type Explanation = {
 	/** The number of times the given spy was called. */
@@ -38,6 +38,7 @@ export const explain = (fn: AnyFunction): Explanation => {
 	const calls = getCalls(fn);
 
 	if (!calls) {
+		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 		throw new TypeError(`Function "${fn.name || "anonymous"}" is not a spy`);
 	}
 
@@ -47,6 +48,6 @@ export const explain = (fn: AnyFunction): Explanation => {
 		callCount: calls.length,
 		called: calls.length > 0,
 		calls,
-		flatCalls: args.flat(Number.POSITIVE_INFINITY),
+		flatCalls: args.flat(Infinity),
 	};
 };

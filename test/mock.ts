@@ -1,7 +1,7 @@
 import test from "ava";
-import { returns } from "../src/fakes.js";
-import { mock } from "../src/mock.js";
-import { spy } from "../src/spy.js";
+import { returns } from "../src/fakes.ts";
+import { mock } from "../src/mock.ts";
+import { spy } from "../src/spy.ts";
 
 type Person = {
 	name: string;
@@ -48,11 +48,11 @@ test("empty mock", t => {
 });
 
 test("sets names of spies", t => {
-	const obj = {
+	const foo = {
 		getAge: returns(30),
 	};
 
-	t.is(obj.getAge.name, "");
+	t.is(foo.getAge.name, "");
 
 	const person = mock<Person>({
 		getAge: spy(returns(30)),

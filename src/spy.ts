@@ -1,4 +1,4 @@
-import { addCalls, type AnyFunction, type FunctionCall } from "./store.js";
+import { addCalls, type AnyFunction, type FunctionCall } from "./store.ts";
 
 /**
  * Wraps a function and tracks its calls.

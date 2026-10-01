@@ -13,7 +13,7 @@ const _throw = (error: unknown) => {
  * console.log(fn());
  * //=> 42
  */
-export const returns = <T>(value: T) => () => value;
+export const returns = <T>(value: T) => (): T => value;
 
 /**
  * Creates a function that throws the given `error`.
@@ -42,7 +42,7 @@ export const returns = <T>(value: T) => () => value;
  *   //=> "Oops! Not an error!"
  * }
  */
-export const throws = (error: unknown) => () => _throw(error);
+export const throws = (error: unknown) => (): never => _throw(error);
 
 /**
  * Creates an async function that resolves to the given `value`.
@@ -55,7 +55,7 @@ export const throws = (error: unknown) => () => _throw(error);
  * console.log(await fn());
  * //=> 42
  */
-export const resolves = <T>(value: T) => async () => value;
+export const resolves = <T>(value: T) => async (): Promise<T> => value;
 
 /**
  * Creates an async function that rejects with the given `error`.
@@ -84,7 +84,7 @@ export const resolves = <T>(value: T) => async () => value;
  *   //=> "Oops! Not an error!"
  * }
  */
-export const rejects = (error: unknown) => async () => _throw(error);
+export const rejects = (error: unknown) => async (): Promise<never> => _throw(error);
 
 /** Creates an empty function that does nothing. */
-export const noop = () => () => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+export const noop = () => (): void => {}; // eslint-disable-line @typescript-eslint/no-empty-function

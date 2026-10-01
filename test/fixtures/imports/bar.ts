@@ -1,3 +1,3 @@
 export const bar = (..._: unknown[]) => "bar";
 
-export { baz } from "./baz.js";
+export { baz } from "./baz.ts";

@@ -1,7 +1,7 @@
 import { pathToFileURL } from "node:url";
 import test from "ava";
-import * as tq from "../src/index.js";
-import { atFixture } from "./_util.js";
+import * as tq from "../src/index.ts";
+import { atFixture } from "./_util.ts";
 
 test("throws if importMeta not provided", async t => {
 	await t.throwsAsync(tq.replace(tq.mock()), {
@@ -16,7 +16,7 @@ test("fixes relative module IDs", async t => {
 		modulePath: atFixture("imports"),
 		importMeta: import.meta,
 		localMocks: {
-			"./bar.js": { // eslint-disable-line @typescript-eslint/naming-convention
+			"./bar.js": {
 				bar: tq.spy(),
 				baz: tq.spy(),
 			},

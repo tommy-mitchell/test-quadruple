@@ -1,7 +1,7 @@
-/* eslint-disable @typescript-eslint/no-empty-function */
+/* eslint-disable @typescript-eslint/no-empty-function -- test file */
 import test from "ava";
-import { explain } from "../src/explain.js";
-import { spy } from "../src/spy.js";
+import { explain } from "../src/explain.ts";
+import { spy } from "../src/spy.ts";
 
 test("gets details of a spy", t => {
 	const fn = spy();

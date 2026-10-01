@@ -1,1 +1,1 @@
-export { bar, baz } from "./bar.js";
+export { bar, baz } from "./bar.ts";

@@ -1,5 +1,5 @@
 import { expectType } from "tsd";
-import * as tq from "test-quadruple";
+import * as tq from "../src/index.ts";
 
 type Person = {
 	name: string;

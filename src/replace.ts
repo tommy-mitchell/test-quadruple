@@ -18,7 +18,7 @@ const fixRelativeMocks = (mocks: Replacement, modulePath: string) => {
 
 export type ReplaceOptions = {
 	/** The path to the module to replace. */
-	modulePath: string | URL;
+	modulePath: URL | string;
 	/** Pass in [`import.meta`](https://nodejs.org/dist/latest/docs/api/esm.html#esm_import_meta). */
 	importMeta: ImportMeta;
 	/** Mock modules directly imported by the source module. */
@@ -66,7 +66,7 @@ export const replace = async <ReplacementType>({
 	localMocks = {},
 	globalMocks = {},
 }: ReplaceOptions): Promise<ReplacementType> => {
-	if (!importMeta?.url) {
+	if (!importMeta?.url) { // eslint-disable-line @typescript-eslint/strict-boolean-expressions
 		throw new TypeError("The `importMeta` option is required. Its value must be `import.meta`.");
 	}
 

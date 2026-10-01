@@ -4,5 +4,10 @@
 	"include": ["src", "test", "test-d"],
 	"compilerOptions": {
 		"noEmit": true,
+		"types": ["node"],
+		"rewriteRelativeImportExtensions": true,
+		"erasableSyntaxOnly": true,
+		"verbatimModuleSyntax": true,
+		"isolatedDeclarations": true,
 	},
 }

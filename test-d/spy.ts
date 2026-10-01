@@ -1,5 +1,5 @@
 import { expectAssignable, expectType } from "tsd";
-import * as tq from "test-quadruple";
+import * as tq from "../src/index.ts";
 
 declare const add: (a: number, b: number) => number;
 
