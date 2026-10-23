@@ -1,4 +1,3 @@
-/* eslint-disable @typescript-eslint/no-empty-function -- test file */
 import test from "ava";
 import { explain } from "../src/explain.ts";
 import { spy } from "../src/spy.ts";
@@ -28,13 +27,13 @@ test("gets details of a spy", t => {
 });
 
 test("throws if not a spy", t => {
-	const fn = () => {};
+	const fn = () => {/**/};
 	t.throws(
 		() => explain(fn),
 		{ message: "Function \"fn\" is not a spy", instanceOf: TypeError },
 	);
 
-	t.throws(() => explain(() => {}), { message: "Function \"anonymous\" is not a spy" });
+	t.throws(() => explain(() => {/**/}), { message: "Function \"anonymous\" is not a spy" });
 });
 
 test("tracks calls to the same function separately", t => {

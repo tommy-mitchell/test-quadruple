@@ -11,7 +11,6 @@ test("throws if importMeta not provided", async t => {
 });
 
 test("fixes relative module IDs", async t => {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 	const { bar, baz } = await tq.replace<typeof import("./fixtures/imports/fixture.js")>({
 		modulePath: atFixture("imports"),
 		importMeta: import.meta,
@@ -33,7 +32,6 @@ test("fixes relative module IDs", async t => {
 test.todo("fixes relative module IDs at any depth");
 
 test("allows URL module paths", async t => {
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 	const { bar } = await tq.replace<typeof import("./fixtures/imports/fixture.js")>({
 		modulePath: pathToFileURL(atFixture("imports")),
 		importMeta: import.meta,

@@ -10,7 +10,6 @@ expectAssignable<Record<string, unknown>>(options.globalMocks!);
 
 const { replace } = await tq.replace<typeof tq>({
 	modulePath: "../src/index.js",
-	// @ts-expect-error -- tsd thinks this is a CJS file
 	importMeta: import.meta,
 	localMocks: {
 		explain: tq.noop(),

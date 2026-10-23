@@ -38,7 +38,6 @@ export const explain = (fn: AnyFunction): Explanation => {
 	const calls = getCalls(fn);
 
 	if (!calls) {
-		// eslint-disable-next-line @typescript-eslint/strict-boolean-expressions
 		throw new TypeError(`Function "${fn.name || "anonymous"}" is not a spy`);
 	}
 

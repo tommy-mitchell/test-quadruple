@@ -1,8 +1,8 @@
-#!/usr/bin/env tsimp
-import process from "node:process";
-import meow from "meow";
+#!/usr/bin/env node
+import process from "process";
+import mrowki from "mrowki";
 
-const cli = meow({ importMeta: import.meta });
+const cli = mrowki("Usage…", { pkg: { name: "cli" } });
 
 console.log("input:", cli.input);
 process.exit(0);

@@ -87,4 +87,4 @@ export const resolves = <T>(value: T) => async (): Promise<T> => value;
 export const rejects = (error: unknown) => async (): Promise<never> => _throw(error);
 
 /** Creates an empty function that does nothing. */
-export const noop = () => (): void => {}; // eslint-disable-line @typescript-eslint/no-empty-function
+export const noop = () => (): void => {/**/};

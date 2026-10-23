@@ -66,7 +66,7 @@ export const replace = async <ReplacementType>({
 	localMocks = {},
 	globalMocks = {},
 }: ReplaceOptions): Promise<ReplacementType> => {
-	if (!importMeta?.url) { // eslint-disable-line @typescript-eslint/strict-boolean-expressions
+	if (!importMeta?.url) {
 		throw new TypeError("The `importMeta` option is required. Its value must be `import.meta`.");
 	}
 

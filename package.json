@@ -15,12 +15,10 @@
 		"node": "^22.22 || ^24.15 || >=26"
 	},
 	"scripts": {
-		"prepare": "npm run build",
 		"build": "tsdown",
-		"lint": "xo",
+		"lint": "run-all 'dprint check' xo",
 		"format": "dprint fmt && xo --fix",
-		"test": "c8 ava && npm run test:types",
-		"test:types": "npm run build && tsd -t dist/index.d.ts"
+		"test": "c8 ava && tsd test-d"
 	},
 	"files": [
 		"dist"
@@ -47,23 +45,21 @@
 		"esmock"
 	],
 	"dependencies": {
-		"esmock": "^2.7.6",
-		"map-obj": "^6.0.0"
+		"esmock": "^2.8.0",
+		"map-obj": "^7.0.0"
 	},
 	"devDependencies": {
-		"@microsoft/api-extractor": "^7.59.3",
-		"@tommy-mitchell/dprint-config": "^0.8.0",
-		"@tommy-mitchell/eslint-config-xo": "^2.0.0-beta.10",
-		"@tommy-mitchell/tsconfig": "^4.0.0",
+		"@tommy-mitchell/configs": "^0.5.0",
+		"@tommy-mitchell/test-helpers": "^0.2.0",
 		"@types/node": "^22.20",
-		"ava": "^8.0.1",
+		"ava": "^8.1.2",
 		"c8": "^12.0.0",
-		"dprint": "^0.58.0",
-		"meow": "^14.1.0",
-		"strip-comments-js": "^1.4.0",
-		"ts-pattern": "^5.9.0",
+		"dprint": "^0.64.3",
+		"mrowki": "^0.1.1",
+		"run-all-cli": "^0.1.0",
+		"ts-pattern": "^5.9.2",
 		"tsd": "^0.33.0",
-		"tsdown": "^0.22.14",
+		"tsdown": "^0.23.2",
 		"type-fest": "^5.10.0",
 		"typescript": "~6.0.3",
 		"xo": "^5.0.1"

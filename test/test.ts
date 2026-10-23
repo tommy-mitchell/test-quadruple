@@ -11,19 +11,11 @@ test("replaces a module", async t => {
 		modulePath: atFixture("cli"),
 		importMeta: import.meta,
 		localMocks: {
-			"node:process": {
-				exit: tq.noop(),
-			},
+			process: { exit: tq.noop() },
 		},
 		globalMocks: {
-			process: {
-				argv: ["", "", "1", "2", "3"],
-			},
-			import: {
-				console: {
-					log: logger,
-				},
-			},
+			"node:process": { argv: ["", "", "1", "2", "3"] },
+			"import": { console: { log: logger } },
 		},
 	});
 
@@ -36,7 +28,6 @@ test("replaces a module", async t => {
 test("with args pattern", async t => {
 	t.is(originalBar(), "bar");
 
-	// eslint-disable-next-line @typescript-eslint/consistent-type-imports
 	const { bar, baz } = await tq.replace<typeof import("./fixtures/imports/fixture.js")>({
 		modulePath: atFixture("imports"),
 		importMeta: import.meta,

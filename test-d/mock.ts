@@ -1,3 +1,6 @@
+/* eslint-disable @typescript-eslint/triple-slash-reference -- needed for MediaQueryList */
+/// <reference lib="DOM" />
+
 import { expectType } from "tsd";
 import * as tq from "../src/index.ts";
 

@@ -1,14 +1,9 @@
-import * as configs from "@tommy-mitchell/eslint-config-xo";
+import * as configs from "@tommy-mitchell/configs/xo";
 
 /** @type {import('xo').FlatXoConfig} */
-export default [...configs.xo, ...configs.dprint, {
+export default [...configs.xo, ...configs.dprint, { ignores: ["test-d", "test/fixtures"] }, {
 	rules: {
 		"perfectionist/sort-objects": "off",
 		"perfectionist/sort-object-types": "off",
-		"simple-import-sort/imports": ["error", {
-			groups: [[String.raw`^\u0000`, "^node:", "^tsd", String.raw`^@?\w`, "^", String.raw`^\.`]],
-		}],
 	},
-}, {
-	ignores: ["test/fixtures"],
 }];

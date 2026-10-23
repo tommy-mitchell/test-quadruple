@@ -1,0 +1,4 @@
+{
+	"includes": ["**/*.{js,ts,json,jsonc,yml,markdown}"],
+	"extends": ["npm:@tommy-mitchell/configs/dprint"],
+}

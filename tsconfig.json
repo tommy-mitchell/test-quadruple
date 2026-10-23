@@ -1,13 +1,7 @@
 {
-	"extends": "@tommy-mitchell/tsconfig",
-	"exclude": ["node_modules", "coverage", "dist"],
+	"extends": "@tommy-mitchell/configs/ts/node",
 	"include": ["src", "test", "test-d"],
 	"compilerOptions": {
 		"noEmit": true,
-		"types": ["node"],
-		"rewriteRelativeImportExtensions": true,
-		"erasableSyntaxOnly": true,
-		"verbatimModuleSyntax": true,
-		"isolatedDeclarations": true,
 	},
 }
