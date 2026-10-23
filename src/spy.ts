@@ -1,4 +1,5 @@
 import { addCalls, type AnyFunction, type FunctionCall } from "./store.ts";
+import { arrify } from "./util.ts";
 
 /**
  * Wraps a function and tracks its calls.
@@ -62,10 +63,8 @@ export function spy(fakes?: AnyFunction[]): AnyFunction;
 export function spy(...fakes: AnyFunction[]): AnyFunction;
 
 export function spy(fnOrFakes: AnyFunction | AnyFunction[] = [], ...fakes: AnyFunction[]) {
+	const functions = arrify(fnOrFakes, ...fakes);
 	const calls: FunctionCall[] = [];
-
-	const firstArg = Array.isArray(fnOrFakes) ? fnOrFakes : [fnOrFakes];
-	const functions = [...firstArg, ...fakes];
 
 	const mock = (...args: unknown[]) => {
 		const fn = functions.at(calls.length) ?? functions.at(-1);

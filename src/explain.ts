@@ -36,11 +36,6 @@ export type Explanation = {
  */
 export const explain = (fn: AnyFunction): Explanation => {
 	const calls = getCalls(fn);
-
-	if (!calls) {
-		throw new TypeError(`Function "${fn.name || "anonymous"}" is not a spy`);
-	}
-
 	const args = calls.map(call => call.arguments);
 
 	return {

@@ -49,29 +49,38 @@ test("test-quadrule", async t => {
       },
     },
     globalMocks: {
-      console: {
-        log: logger,
-      },
+      import: {
+        console: {
+          log: logger,
+        },
+      }
     },
   });
 
   bar();
   bar();
-  baz();
 
   t.like(tq.explain(logger), {
-    callCount: 3,
+    callCount: 2,
     called: true,
     calls: [
       { arguments: ["Hello, world!"] },
       { arguments: ["lorem ipsum"] },
-      { arguments: ["buzz"] },
     ],
     flatCalls: [
       "Hello, world!",
       "lorem ipsum",
-      "buzz",
     ],
+  });
+
+  tq.reset(logger);
+  baz();
+
+  t.like(tq.explain(logger), {
+    callCount: 1,
+    called: true,
+    calls: [{ arguments: ["buzz"] }],
+    flatCalls: ["buzz"],
   });
 });
 ```
@@ -158,7 +167,7 @@ spy(3, 4);
 //=> 7
 
 console.log(tq.explain(spy));
-//=> { callCount: 2, called: true, calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }] }
+//=> { calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }], … }
 ```
 
 </p>
@@ -269,6 +278,91 @@ An array of calls to the given spy.
 Type: `unknown[]`
 
 A flattened array of calls to the given spy.
+
+### reset(spy)
+
+Resets the tracked calls and fakes sequence of a spy. Throws if the given function is not a spy.
+
+<details>
+<summary>Example</summary>
+<p>
+
+```ts
+import * as tq from "test-quadruple";
+
+const fn = tq.spy([tq.returns(1), tq.returns(2)]);
+
+fn();
+//=> 1
+
+fn();
+//=> 2
+
+fn();
+//=> 2
+
+console.log(tq.explain(fn));
+//=> { called: true, … }
+
+tq.reset(fn);
+console.log(tq.explain(fn));
+//=> { called: false, … }
+
+fn();
+//=> 1
+```
+
+</p>
+</details>
+
+#### spy
+
+Type: `function`
+
+The spy to reset.
+
+### reset(spies)
+
+### reset(...spies)
+
+Resets the tracked calls and fakes sequences of the provided spies. Throws if the given functions are not spies.
+
+<details>
+<summary>Example</summary>
+<p>
+
+```ts
+import * as tq from "test-quadruple";
+
+const fn1 = tq.spy();
+const fn2 = tq.spy();
+
+fn1();
+console.log(tq.explain(fn1));
+//=> { called: true, … }
+
+fn2();
+console.log(tq.explain(fn2));
+//=> { called: true, … }
+
+tq.reset([fn1, fn2]);
+// OR: tq.reset(fn1, fn2);
+
+console.log(tq.explain(fn1));
+//=> { called: false, … }
+
+console.log(tq.explain(fn2));
+//=> { called: false, … }
+```
+
+</p>
+</details>
+
+#### spies
+
+Type: `function[]`
+
+An array of spies to reset.
 
 ## Fakes
 
