@@ -1,6 +1,6 @@
 import { pathToFileURL } from "node:url";
 import test from "ava";
-import * as tq from "../src/index.ts";
+import * as tq from "#src/index.ts";
 import { atFixture } from "./_util.ts";
 
 test("throws if importMeta not provided", async t => {

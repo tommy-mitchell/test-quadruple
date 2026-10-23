@@ -1,7 +1,7 @@
 import test from "ava";
-import { returns } from "../src/fakes.ts";
-import { mock } from "../src/mock.ts";
-import { spy } from "../src/spy.ts";
+import { returns } from "#src/fakes.ts";
+import { mock } from "#src/mock.ts";
+import { spy } from "#src/spy.ts";
 
 type Person = {
 	name: string;

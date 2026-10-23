@@ -1,6 +1,6 @@
 import test from "ava";
 import { match, P } from "ts-pattern";
-import * as tq from "../src/index.ts";
+import * as tq from "#src/index.ts";
 import { atFixture } from "./_util.ts";
 import { bar as originalBar } from "./fixtures/imports/fixture.ts";
 

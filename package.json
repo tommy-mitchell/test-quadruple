@@ -10,6 +10,9 @@
 		"types": "./dist/index.d.ts",
 		"default": "./dist/index.js"
 	},
+	"imports": {
+		"#src/*.ts": "./src/*.ts"
+	},
 	"sideEffects": false,
 	"engines": {
 		"node": "^22.22 || ^24.15 || >=26"

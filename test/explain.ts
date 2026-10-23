@@ -1,6 +1,6 @@
 import test from "ava";
-import { explain } from "../src/explain.ts";
-import { spy } from "../src/spy.ts";
+import { explain } from "#src/explain.ts";
+import { spy } from "#src/spy.ts";
 
 test("gets details of a spy", t => {
 	const fn = spy();
