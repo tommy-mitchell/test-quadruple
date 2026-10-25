@@ -42,7 +42,10 @@ test("fixes relative module IDs", async t => {
 		importMeta: import.meta,
 		localMocks: {
 			"./bar.ts": {
-				bar: tq.spy(),
+				"bar": tq.spy(),
+				"#baz": {
+					baz: tq.spy(),
+				},
 			},
 			"#mrowki": {
 				log: { info: tq.spy() },
@@ -52,9 +55,6 @@ test("fixes relative module IDs", async t => {
 			},
 			"./nested/other.ts": {
 				other: tq.spy(),
-			},
-			"#baz": {
-				baz: tq.spy(),
 			},
 		},
 	});
@@ -152,3 +152,5 @@ test("strict overrides modules", async t => {
 	t.is(argv as any, undefined);
 	t.like(tq.explain(exit), { called: false });
 });
+
+test.todo("preserves object identities");

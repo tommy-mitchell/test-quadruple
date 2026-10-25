@@ -2,22 +2,38 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
 import type { UnknownRecord as Replacement } from "type-fest";
-import { isRelative } from "#src/helpers/utils.ts";
+import { groupByRelative, isPlainObject, isRelative } from "#src/helpers/utils.ts";
 
 type Replacements = Replacement & { global?: Replacement; };
 
-/** Turns all relative module paths into absolute paths. */
-const fixRelativePaths = (mocks: Replacements, modulePath: string) => {
-	for (const key of Object.keys(mocks)) {
+/** Turn all relative module paths into absolute paths with mocks applied. */
+const fixRelativeMocks = async (mocks: Replacement, importMeta: ImportMeta, modulePath: string) => (Promise.all(
+	Object.keys(mocks).map(async (key) => {
 		if (!isRelative(key)) {
-			continue;
+			return;
 		}
 
 		const resolvedPath = path.resolve(path.dirname(modulePath), key);
-		mocks[resolvedPath] = mocks[key];
+
+		if (isPlainObject(mocks[key])) {
+			const [hasNestedRelatives, nestedRelatives, replacements] = groupByRelative(mocks[key]);
+
+			if (hasNestedRelatives) {
+				await fixRelativeMocks(nestedRelatives, importMeta, resolvedPath);
+				mocks[resolvedPath] = {
+					...await esmock(resolvedPath, importMeta.url, nestedRelatives),
+					...replacements,
+				};
+			} else {
+				mocks[resolvedPath] = mocks[key];
+			}
+		} else {
+			mocks[resolvedPath] = mocks[key];
+		}
+
 		delete mocks[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
-	}
-};
+	}),
+));
 
 /** Maps global scope mocks to `esmock`'s format. */
 const mockGlobalScope = (mocks: Replacements) => {
@@ -92,7 +108,7 @@ export const replace = async <ReplacementType>({
 
 	// Resolve module path in case of subpath imports
 	const absolutePath = fileURLToPath(importMeta.resolve(modulePath));
-	fixRelativePaths(localMocks, absolutePath);
+	await fixRelativeMocks(localMocks, importMeta, absolutePath);
 
 	mockGlobalScope(localMocks);
 	mockGlobalScope(globalMocks);

@@ -10,7 +10,20 @@ export const arrify = <T>(value: T | T[], ...rest: T[]): T[] => ([
 /** Returns true if the given path is relative. */
 export const isRelative = (value: string): boolean => !path.isAbsolute(value) && value.startsWith(".");
 
-const isPlainObject = (object: unknown): object is UnknownRecord => (
+type GroupByRelativeResult = [hasRelative: boolean, relative: Record<string, unknown>, other: Record<string, unknown>];
+
+/** Groups object keys by whether they are relative paths. */
+export const groupByRelative = (object: Record<string, unknown>): GroupByRelativeResult => {
+	const grouped = Object.groupBy(Object.entries(object), ([key]) => isRelative(key) ? "relative" : "other");
+
+	return [
+		Boolean(grouped.relative),
+		Object.fromEntries(grouped.relative ?? []),
+		Object.fromEntries(grouped.other ?? []),
+	];
+};
+
+export const isPlainObject = (object: unknown): object is UnknownRecord => (
 	Boolean(object) && typeof object === "object"
 	&& (Object.getPrototypeOf(object) === null || Object.getPrototypeOf(Object.getPrototypeOf(object)) === null)
 );
