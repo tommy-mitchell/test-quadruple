@@ -1,5 +1,6 @@
-import { type AnyFunction, resetCalls } from "./store.ts";
-import { arrify } from "./util.ts";
+import { resetCalls } from "#src/helpers/store.ts";
+import { arrify } from "#src/helpers/utils.ts";
+import type { AnyFunction } from "#src/types.ts";
 
 /**
  * Resets the tracked calls and fakes sequence of a spy. Throws if the given function is not a spy.

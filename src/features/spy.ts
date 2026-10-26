@@ -1,5 +1,6 @@
-import { addCalls, type AnyFunction, type FunctionCall } from "./store.ts";
-import { arrify } from "./util.ts";
+import { addCalls } from "#src/helpers/store.ts";
+import { arrify } from "#src/helpers/utils.ts";
+import type { AnyFunction, FunctionCall } from "#src/types.ts";
 
 export const SPY_NAME_SYMBOL = Symbol("spy") as unknown as string;
 

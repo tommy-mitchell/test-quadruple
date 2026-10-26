@@ -1,5 +1,5 @@
 import test from "ava";
-import { spy } from "#src/spy.ts";
+import { spy } from "#src/features/spy.ts";
 
 test("no fakes returns undefined", t => {
 	const fn = spy();

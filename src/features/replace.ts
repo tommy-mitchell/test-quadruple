@@ -2,7 +2,7 @@ import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
 import type { UnknownRecord as Replacement } from "type-fest";
-import { isRelative } from "./util.ts";
+import { isRelative } from "#src/helpers/utils.ts";
 
 type Replacements = Replacement & { global?: Replacement; };
 

@@ -54,10 +54,10 @@ test("throws if not a spy", t => {
 test("does nothing if no spies", async (t) => {
 	const resetCalls = tq.spy();
 
-	const { reset } = await tq.replace<typeof import("#src/reset.ts")>({
-		modulePath: new URL("../src/reset.ts", import.meta.url),
+	const { reset } = await tq.replace<typeof import("#src/features/reset.ts")>({
+		modulePath: "#src/features/reset.ts",
 		importMeta: import.meta,
-		localMocks: { "./store.ts": { resetCalls } },
+		localMocks: { "#src/helpers/store.ts": { resetCalls } },
 	});
 
 	// @ts-expect-error -- types require at least one argument

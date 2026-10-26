@@ -1,4 +1,5 @@
-import { type AnyFunction, type FunctionCall, getCalls } from "./store.ts";
+import { getCalls } from "#src/helpers/store.ts";
+import type { AnyFunction, FunctionCall } from "#src/types.ts";
 
 export type Explanation = {
 	/** The number of times the given spy was called. */

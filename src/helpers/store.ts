@@ -1,8 +1,4 @@
-export type AnyFunction = (...args: any[]) => any;
-
-export type FunctionCall = {
-	arguments: unknown[];
-};
+import type { AnyFunction, FunctionCall } from "#src/types.ts";
 
 const CALLS = new WeakMap<AnyFunction, FunctionCall[]>();
 

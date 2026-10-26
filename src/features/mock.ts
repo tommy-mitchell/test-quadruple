@@ -1,6 +1,6 @@
 import type { PartialDeep as PartialDeepInternal, UnknownRecord } from "type-fest";
+import { objectForEach } from "#src/helpers/utils.ts";
 import { SPY_NAME_SYMBOL } from "./spy.ts";
-import { objectForEach } from "./util.ts";
 
 /** Deeply sets names of spies and anonymous functions to their associated keys. */
 const defineFunctionNames = (object: UnknownRecord) => (
