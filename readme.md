@@ -158,13 +158,10 @@ import * as tq from "test-quadruple";
 
 const add = (a: number, b: number) => a + b;
 const spy = tq.spy(add);
-//    ^? const spy: (a: number, b: number) => number
+//    ^?  (a: number, b: number) => number
 
-spy(1, 2);
-//=> 3
-
-spy(3, 4);
-//=> 7
+spy(1, 2); //=> 3
+spy(3, 4); //=> 7
 
 console.log(tq.explain(spy));
 //=> { calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }], … }
@@ -195,14 +192,9 @@ import * as tq from "test-quadruple";
 const fn = tq.spy([tq.returns(1), tq.returns(2)]);
 // OR: tq.spy(tq.returns(1), tq.returns(2));
 
-fn();
-//=> 1
-
-fn();
-//=> 2
-
-fn();
-//=> 2
+fn(); //=> 1
+fn(); //=> 2
+fn(); //=> 2
 ```
 
 </p>
@@ -213,6 +205,38 @@ fn();
 Type: `function[]`
 
 An optional array of fakes to use, in order.
+
+### spy()
+
+Creates an anonymous spy.
+
+<details>
+<summary>Example</summary>
+<p>
+
+```ts
+import * as tq from "test-quadruple";
+
+const { add } = await tq.replace({
+  modulePath: "./module.js",
+  importMeta: import.meta,
+  localMocks: {
+    "./some-dep.js": {
+      add: tq.spy()
+      //      ^?  tq.spy<(a: number, b: number) => number>
+    },
+  },
+});
+
+add(1, 2);
+add(3, 4);
+
+console.log(tq.explain(add));
+//=> { calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }], … }
+```
+
+</p>
+</details>
 
 ### explain(spy): Explanation
 
@@ -292,14 +316,9 @@ import * as tq from "test-quadruple";
 
 const fn = tq.spy([tq.returns(1), tq.returns(2)]);
 
-fn();
-//=> 1
-
-fn();
-//=> 2
-
-fn();
-//=> 2
+fn(); //=> 1
+fn(); //=> 2
+fn(); //=> 2
 
 console.log(tq.explain(fn));
 //=> { called: true, … }
@@ -384,23 +403,12 @@ const fn = tq.spy([
   tq.noop(),
 ]);
 
-fn();
-//=> 1
-
-fn();
-//=> 2
-
-fn();
-//=> Error: "Oops! All errors!"
-
-await fn();
-//=> 3
-
-await fn();
-//=> "Oops! Not an error!"
-
-fn();
-//=> void
+fn();       //=> 1
+fn();       //=> 2
+fn();       //=> Throws Error("Oops! All errors!")
+await fn(); //=> 3
+await fn(); //=> Rejects with "Oops! Not an error!"
+fn();       //=> void
 ```
 
 </p>

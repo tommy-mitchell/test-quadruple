@@ -5,6 +5,31 @@ import type { AnyFunction, FunctionCall } from "#src/types.ts";
 export const SPY_NAME_SYMBOL = Symbol("spy") as unknown as string;
 
 /**
+ * Creates an anonymous spy.
+ *
+ * @example
+ * import * as tq from "test-quadruple";
+ *
+ * const { add } = await tq.replace({
+ *   modulePath: "./module.js",
+ *   importMeta: import.meta,
+ *   localMocks: {
+ *     "./some-dep.js": {
+ *       add: tq.spy()
+ *       //      ^?  tq.spy<(a: number, b: number) => number>
+ *     },
+ *   },
+ * });
+ *
+ * add(1, 2);
+ * add(3, 4);
+ *
+ * console.log(tq.explain(add));
+ * //=> { calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }], … }
+ */
+export function spy<FunctionType extends AnyFunction>(): FunctionType;
+
+/**
  * Wraps a function and tracks its calls.
  *
  * @example
@@ -12,18 +37,15 @@ export const SPY_NAME_SYMBOL = Symbol("spy") as unknown as string;
  *
  * const add = (a: number, b: number) => a + b;
  * const spy = tq.spy(add);
- * //    ^? const spy: (a: number, b: number) => number
+ * //    ^?  (a: number, b: number) => number
  *
- * spy(1, 2);
- * //=> 3
- *
- * spy(3, 4);
- * //=> 7
+ * spy(1, 2); //=> 3
+ * spy(3, 4); //=> 7
  *
  * console.log(tq.explain(spy));
- * //=> { callCount: 2, called: true, calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }] }
+ * //=> { calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }], … }
  */
-export function spy<FunctionType extends AnyFunction>(fn?: FunctionType): FunctionType;
+export function spy<FunctionType extends AnyFunction>(fn: FunctionType): FunctionType; // eslint-disable-line @typescript-eslint/unified-signatures
 
 /**
  * Creates a spy that uses the provided fakes, in order. Subsequent calls will use the last provided fake.
@@ -35,14 +57,9 @@ export function spy<FunctionType extends AnyFunction>(fn?: FunctionType): Functi
  *
  * const fn = tq.spy([tq.returns(1), tq.returns(2)]);
  *
- * fn();
- * //=> 1
- *
- * fn();
- * //=> 2
- *
- * fn();
- * //=> 2
+ * fn(); //=> 1
+ * fn(); //=> 2
+ * fn(); //=> 2
  */
 export function spy(fakes?: AnyFunction[]): AnyFunction;
 
@@ -54,14 +71,9 @@ export function spy(fakes?: AnyFunction[]): AnyFunction;
  *
  * const fn = tq.spy(tq.returns(1), tq.returns(2));
  *
- * fn();
- * //=> 1
- *
- * fn();
- * //=> 2
- *
- * fn();
- * //=> 2
+ * fn(); //=> 1
+ * fn(); //=> 2
+ * fn(); //=> 2
  */
 export function spy(...fakes: AnyFunction[]): AnyFunction;
 

@@ -12,14 +12,9 @@ import type { AnyFunction } from "#src/types.ts";
  *
  * const fn = tq.spy([tq.returns(1), tq.returns(2)]);
  *
- * fn();
- * //=> 1
- *
- * fn();
- * //=> 2
- *
- * fn();
- * //=> 2
+ * fn(); //=> 1
+ * fn(); //=> 2
+ * fn(); //=> 2
  *
  * tq.explain(fn);
  * //=> { called: true, … }
