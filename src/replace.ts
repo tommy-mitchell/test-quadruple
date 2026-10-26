@@ -1,25 +1,27 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
-import mapObject from "map-obj";
+import { isRelative } from "./util.ts";
 
 type Replacement = Record<string, unknown>;
 
-const fixRelativeMocks = (mocks: Replacement, modulePath: string) => {
-	return mapObject(mocks, (key, value) => {
-		if (key.startsWith("./")) {
-			const resolvedPath = path.resolve(path.dirname(modulePath), key);
-			return [resolvedPath, value];
+/** Turns all relative module paths into absolute paths. */
+const fixRelativePaths = (mocks: Replacement, modulePath: string) => {
+	for (const key of Object.keys(mocks)) {
+		if (!isRelative(key)) {
+			continue;
 		}
 
-		return [key, value];
-	}, { deep: true });
+		const resolvedPath = path.resolve(path.dirname(modulePath), key);
+		mocks[resolvedPath] = mocks[key];
+		delete mocks[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
+	}
 };
 
 export type ReplaceOptions = {
-	/** The path to the module to replace. */
+	/** The path to the module to replace. Supports {@link https://nodejs.org/api/packages.html#subpath-imports subpath imports}. */
 	modulePath: URL | string;
-	/** Pass in [`import.meta`](https://nodejs.org/dist/latest/docs/api/esm.html#esm_import_meta). */
+	/** Pass in {@link https://mdn.io/import.meta `import.meta`}. */
 	importMeta: ImportMeta;
 	/** Mock modules directly imported by the source module. */
 	localMocks?: Replacement;
@@ -39,7 +41,7 @@ export type ReplaceOptions = {
  *
  * const { program } = await tq.replace<typeof import('./program.js')>({
  *   modulePath: "./program.js",
- *   importMeta: import.meta, // Required
+ *   importMeta: import.meta,
  *   localMocks: {
  *     execa: {
  *       execa: tq.spy(args => match(args)
@@ -74,5 +76,9 @@ export const replace = async <ReplacementType>({
 		modulePath = fileURLToPath(modulePath);
 	}
 
-	return esmock(modulePath, importMeta.url, fixRelativeMocks(localMocks, modulePath), globalMocks);
+	// Resolve module path in case of subpath imports
+	const absolutePath = fileURLToPath(importMeta.resolve(modulePath));
+	fixRelativePaths(localMocks, absolutePath);
+
+	return esmock(modulePath, importMeta.url, localMocks, globalMocks);
 };

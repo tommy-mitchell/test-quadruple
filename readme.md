@@ -445,7 +445,7 @@ import * as tq from "test-quadruple";
 
 const { program } = await tq.replace<typeof import('./program.js')>({
   modulePath: new URL("program.js", import.meta.url),
-  importMeta: import.meta, // Required
+  importMeta: import.meta,
   localMocks: {
     execa: {
       execa: tq.spy(args => match(args)
@@ -478,13 +478,13 @@ Type: `object`
 
 Type: `string | URL`
 
-The path to the module to replace.
+The path to the module to replace. Supports [subpath imports](https://nodejs.org/api/packages.html#subpath-imports).
 
 ##### importMeta
 
 Type: `object`
 
-Pass in [`import.meta`](https://nodejs.org/dist/latest/docs/api/esm.html#esm_import_meta).
+Pass in [`import.meta`](https://mdn.io/import.meta).
 
 ##### localMocks?
 

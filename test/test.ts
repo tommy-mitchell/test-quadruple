@@ -1,14 +1,13 @@
 import test from "ava";
 import { match, P } from "ts-pattern";
 import * as tq from "#src/index.ts";
-import { atFixture } from "./_util.ts";
 import { bar as originalBar } from "./fixtures/imports/fixture.ts";
 
 test("replaces a module", async t => {
 	const logger = tq.spy();
 
 	await tq.replace({
-		modulePath: atFixture("cli"),
+		modulePath: "#fixtures/cli",
 		importMeta: import.meta,
 		localMocks: {
 			process: { exit: tq.noop() },
@@ -28,8 +27,8 @@ test("replaces a module", async t => {
 test("with args pattern", async t => {
 	t.is(originalBar(), "bar");
 
-	const { bar, baz } = await tq.replace<typeof import("./fixtures/imports/fixture.js")>({
-		modulePath: atFixture("imports"),
+	const { bar, baz } = await tq.replace<typeof import("#fixtures/imports")>({
+		modulePath: "#fixtures/imports",
 		importMeta: import.meta,
 		localMocks: {
 			"./bar.js": {

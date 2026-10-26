@@ -11,7 +11,10 @@
 		"default": "./dist/index.js"
 	},
 	"imports": {
-		"#src/*.ts": "./src/*.ts"
+		"#src/*.ts": "./src/*.ts",
+		"#fixtures/*": "./test/fixtures/*/fixture.ts",
+		"#mrowki": "mrowki",
+		"#baz": "./test/fixtures/imports/nested/baz.ts"
 	},
 	"sideEffects": false,
 	"engines": {
