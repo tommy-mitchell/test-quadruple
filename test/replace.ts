@@ -103,3 +103,38 @@ test("preserves object identities", async t => {
 	t.is(foo.name, "not-foo");
 	t.is(foo, replacement);
 });
+
+test("mocks global scope", async t => {
+	const loggerLocal = tq.spy();
+	const loggerGlobal = tq.spy();
+
+	const { foo, bar, baz, date } = await tq.replace<typeof import("#fixtures/globals")>({
+		modulePath: "#fixtures/globals",
+		importMeta: import.meta,
+		localMocks: {
+			global: {
+				console: { log: loggerLocal },
+			},
+			import: {
+				Date: { // eslint-disable-line @typescript-eslint/naming-convention
+					now: tq.returns(964_101_600_000),
+				},
+			},
+		},
+		globalMocks: {
+			global: {
+				console: { log: loggerGlobal },
+				globalThis: { console: { log: loggerGlobal } },
+			},
+		},
+	});
+
+	foo();
+	bar();
+	baz();
+
+	t.like(tq.explain(loggerLocal), { flatCalls: ["foo"] });
+	t.like(tq.explain(loggerGlobal), { flatCalls: ["bar", "baz"] });
+
+	t.is(date(), 964_101_600_000);
+});

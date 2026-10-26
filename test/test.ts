@@ -18,9 +18,7 @@ test("replaces a module", async t => {
 		},
 	});
 
-	const { calls } = tq.explain(logger);
-	const logs = calls[0]!.arguments;
-
+	const logs = tq.explain(logger).calls[0]!.arguments;
 	t.deepEqual(logs, ["input:", ["1", "2", "3"]]);
 });
 

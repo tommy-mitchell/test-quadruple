@@ -49,7 +49,7 @@ test("test-quadrule", async t => {
       },
     },
     globalMocks: {
-      import: {
+      global: {
         console: {
           log: logger,
         },
@@ -470,6 +470,62 @@ await program("echo hi");
 </p>
 </details>
 
+In [`localMocks`](#localmocks) and [`globalMocks`](#globalmocks), you can use the `global` key to replace items in the [global scope](https://mdn.io/global-scope):
+
+<details>
+<summary>Example</summary>
+<p>
+
+```js
+// foo.js
+export const foo = () => console.log("foo");
+export const bar = () => globalThis.console.log("bar");
+export { baz } from "./baz.js"
+```
+
+```js
+// bar.js
+export const baz = () => console.log("bar");
+```
+
+```js
+import * as tq from "test-quadruple";
+
+const loggerLocal = tq.spy();
+const loggerGlobal = tq.spy();
+
+const { foo, bar, baz } = await tq.replace({
+  modulePath: "./foo.js",
+  importMeta: import.meta,
+  localMocks: {
+    global: {
+      console: { log: loggerLocal }
+    }
+  },
+  globalMocks: {
+    global: {
+      console: { log: loggerGlobal },
+      globalThis: {
+        console: { log: loggerGlobal }
+      }
+    }
+  }
+});
+
+foo();
+bar();
+baz();
+
+console.log(tq.explain(loggerLocal));
+//=> { flatCalls: ["foo"], … }
+
+console.log(tq.explain(loggerGlobal));
+//=> { flatCalls: ["bar", "baz"], … }
+```
+
+</p>
+</details>
+
 #### options
 
 Type: `object`
@@ -496,7 +552,7 @@ Mock modules directly imported by the source module.
 
 Type: `object`
 
-Mock modules or globals imported anywhere in the source tree.
+Mock modules imported anywhere in the source tree.
 
 ## Related
 

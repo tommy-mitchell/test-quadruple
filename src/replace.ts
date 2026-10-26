@@ -1,12 +1,13 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
+import type { UnknownRecord as Replacement } from "type-fest";
 import { isRelative } from "./util.ts";
 
-type Replacement = Record<string, unknown>;
+type Replacements = Replacement & { global?: Replacement; };
 
 /** Turns all relative module paths into absolute paths. */
-const fixRelativePaths = (mocks: Replacement, modulePath: string) => {
+const fixRelativePaths = (mocks: Replacements, modulePath: string) => {
 	for (const key of Object.keys(mocks)) {
 		if (!isRelative(key)) {
 			continue;
@@ -18,15 +19,25 @@ const fixRelativePaths = (mocks: Replacement, modulePath: string) => {
 	}
 };
 
+/** Maps global scope mocks to `esmock`'s format. */
+const mockGlobalScope = (mocks: Replacements) => {
+	if (!Object.hasOwn(mocks, "global")) {
+		return;
+	}
+
+	mocks["import"] = { ...mocks.global, ...(mocks["import"] as Replacement) };
+	delete mocks.global;
+};
+
 export type ReplaceOptions = {
 	/** The path to the module to replace. Supports {@link https://nodejs.org/api/packages.html#subpath-imports subpath imports}. */
 	modulePath: URL | string;
 	/** Pass in {@link https://mdn.io/import.meta `import.meta`}. */
 	importMeta: ImportMeta;
 	/** Mock modules directly imported by the source module. */
-	localMocks?: Replacement;
-	/** Mock modules or globals imported anywhere in the source tree. */
-	globalMocks?: Replacement;
+	localMocks?: Replacements;
+	/** Mock modules imported anywhere in the source tree. */
+	globalMocks?: Replacements;
 };
 
 /**
@@ -79,6 +90,9 @@ export const replace = async <ReplacementType>({
 	// Resolve module path in case of subpath imports
 	const absolutePath = fileURLToPath(importMeta.resolve(modulePath));
 	fixRelativePaths(localMocks, absolutePath);
+
+	mockGlobalScope(localMocks);
+	mockGlobalScope(globalMocks);
 
 	return esmock(modulePath, importMeta.url, localMocks, globalMocks);
 };

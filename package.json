@@ -51,7 +51,7 @@
 		"esmock"
 	],
 	"dependencies": {
-		"esmock": "^2.8.0"
+		"esmock": "^3.0.0"
 	},
 	"devDependencies": {
 		"@tommy-mitchell/configs": "^0.5.0",
