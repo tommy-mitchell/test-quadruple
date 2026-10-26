@@ -33,7 +33,10 @@ test("throws if not a spy", t => {
 		{ message: "Function \"fn\" is not a spy", instanceOf: TypeError },
 	);
 
-	t.throws(() => explain(() => {/**/}), { message: "Function \"anonymous\" is not a spy" });
+	t.throws(
+		() => explain(() => {/**/}),
+		{ message: "Function \"anonymous\" is not a spy" },
+	);
 });
 
 test("tracks calls to the same function separately", t => {

@@ -22,7 +22,7 @@ export const SPY_NAME_SYMBOL = Symbol("spy") as unknown as string;
  * console.log(tq.explain(spy));
  * //=> { callCount: 2, called: true, calls: [{ arguments: [1, 2] }, { arguments: [3, 4] }] }
  */
-export function spy<FunctionType extends AnyFunction>(fn: FunctionType): FunctionType;
+export function spy<FunctionType extends AnyFunction>(fn?: FunctionType): FunctionType;
 
 /**
  * Creates a spy that uses the provided fakes, in order. Subsequent calls will use the last provided fake.
