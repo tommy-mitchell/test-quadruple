@@ -51,8 +51,7 @@
 		"esmock"
 	],
 	"dependencies": {
-		"esmock": "^2.8.0",
-		"map-obj": "^7.0.0"
+		"esmock": "^2.8.0"
 	},
 	"devDependencies": {
 		"@tommy-mitchell/configs": "^0.5.0",

@@ -30,3 +30,8 @@ test("multiple calls - variadic", t => {
 	t.is(fn(), 2);
 	t.is(fn(), 2);
 });
+
+test("spy name", t => {
+	const fn = spy(() => 1);
+	t.is(String(fn.name), "Symbol(spy)"); // eslint-disable-line unicorn/no-useless-coercion, @typescript-eslint/no-unnecessary-type-conversion
+});

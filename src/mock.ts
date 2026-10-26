@@ -1,7 +1,15 @@
-import mapObject from "map-obj";
-import type { PartialDeep as PartialDeepInternal } from "type-fest";
+import type { PartialDeep as PartialDeepInternal, UnknownRecord } from "type-fest";
+import { SPY_NAME_SYMBOL } from "./spy.ts";
+import { objectForEach } from "./util.ts";
 
-type UnknownRecord = Record<string, unknown>;
+/** Deeply sets names of spies and anonymous functions to their associated keys. */
+const defineFunctionNames = (object: UnknownRecord) => (
+	objectForEach(object, (key, value) => {
+		if (typeof value === "function" && (!value.name || value.name === SPY_NAME_SYMBOL)) {
+			Object.defineProperty(value, "name", { value: key });
+		}
+	})
+);
 
 type PartialDeep<ObjectType> = {
 	[KeyType in keyof ObjectType]?: PartialDeepInternal<ObjectType[KeyType], { recurseIntoArrays: true; }>;
@@ -36,11 +44,9 @@ type PartialMock<MockType> = MockType extends UnknownRecord ? PartialDeep<MockTy
  *   },
  * }));
  */
-export const mock = <MockType>(object?: PartialMock<MockType>): MockType => (
-	mapObject(object ?? {}, (key, value) => [
-		key,
-		typeof value === "function" // Define function name if missing
-			? Object.defineProperty(value, "name", { value: key })
-			: value,
-	], { deep: true }) as MockType
-);
+export const mock = <MockType>(object?: PartialMock<MockType>): MockType => {
+	object ??= {} as PartialMock<MockType>; // eslint-disable-line @typescript-eslint/consistent-type-assertions
+
+	defineFunctionNames(object);
+	return object as MockType;
+};

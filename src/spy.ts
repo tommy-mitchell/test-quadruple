@@ -1,6 +1,8 @@
 import { addCalls, type AnyFunction, type FunctionCall } from "./store.ts";
 import { arrify } from "./util.ts";
 
+export const SPY_NAME_SYMBOL = Symbol("spy") as unknown as string;
+
 /**
  * Wraps a function and tracks its calls.
  *
@@ -73,6 +75,8 @@ export function spy(fnOrFakes: AnyFunction | AnyFunction[] = [], ...fakes: AnyFu
 		// eslint-disable-next-line @typescript-eslint/no-unsafe-return
 		return fn?.(...args);
 	};
+
+	Object.defineProperty(mock, "name", { value: SPY_NAME_SYMBOL });
 
 	addCalls(mock, calls);
 	return mock;
