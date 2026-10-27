@@ -138,3 +138,17 @@ test("mocks global scope", async t => {
 
 	t.is(date(), 964_101_600_000);
 });
+
+test("strict overrides modules", async t => {
+	const { argv, exit } = await tq.replace<typeof import("#fixtures/strict")>({
+		modulePath: "#fixtures/strict",
+		importMeta: import.meta,
+		strict: true,
+		localMocks: {
+			"node:process": { exit: tq.spy() },
+		},
+	});
+
+	t.is(argv as any, undefined);
+	t.like(tq.explain(exit), { called: false });
+});

@@ -550,6 +550,12 @@ Type: `object`
 
 Pass in [`import.meta`](https://mdn.io/import.meta).
 
+##### strict?
+
+Type: `boolean`
+
+By default, mocks are merged with the original modules. Set this to `true` to override the mocked modules instead.
+
 ##### localMocks?
 
 Type: `object`

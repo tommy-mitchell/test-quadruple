@@ -34,6 +34,8 @@ export type ReplaceOptions = {
 	modulePath: URL | string;
 	/** Pass in {@link https://mdn.io/import.meta `import.meta`}. */
 	importMeta: ImportMeta;
+	/** By default, mocks are merged with the original modules. Set this to `true` to override the mocked modules instead. */
+	strict?: boolean;
 	/** Mock modules directly imported by the source module. */
 	localMocks?: Replacements;
 	/** Mock modules imported anywhere in the source tree. */
@@ -76,6 +78,7 @@ export type ReplaceOptions = {
 export const replace = async <ReplacementType>({
 	modulePath,
 	importMeta,
+	strict,
 	localMocks = {},
 	globalMocks = {},
 }: ReplaceOptions): Promise<ReplacementType> => {
@@ -94,5 +97,5 @@ export const replace = async <ReplacementType>({
 	mockGlobalScope(localMocks);
 	mockGlobalScope(globalMocks);
 
-	return esmock(modulePath, importMeta.url, localMocks, globalMocks);
+	return esmock(modulePath, importMeta.url, localMocks, globalMocks, { strict });
 };
