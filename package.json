@@ -1,6 +1,6 @@
 {
 	"name": "test-quadruple",
-	"version": "1.1.0",
+	"version": "1.2.0",
 	"description": "Simple and declarative mocks, spies, and replacements.",
 	"license": "MIT",
 	"repository": "tommy-mitchell/test-quadruple",
