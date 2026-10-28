@@ -22,7 +22,7 @@
 	},
 	"scripts": {
 		"build": "tsdown",
-		"prepack": "npm pkg delete imports scripts files devDependencies ava",
+		"prepack": "npm pkg delete imports scripts devDependencies ava",
 		"lint": "run-all 'dprint check' xo",
 		"format": "dprint fmt && xo --fix",
 		"test": "c8 ava && tsd test-d"
