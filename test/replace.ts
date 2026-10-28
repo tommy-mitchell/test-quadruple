@@ -87,6 +87,86 @@ test("fixes relative module IDs - backtracking", async t => {
 	t.like(tq.explain(outer), { callCount: 1 });
 });
 
+test("fixes relative module IDs nested in subpath imports", async t => {
+	const { message } = await tq.replace<typeof import("#fixtures/chain")>({
+		modulePath: "#fixtures/chain",
+		importMeta: import.meta,
+		localMocks: {
+			"./mid.ts": {
+				"#fixtures/default-export": {
+					"./greet.ts": tq.returns("mocked"),
+				},
+			},
+		},
+	});
+
+	t.is(message, "mocked");
+});
+
+test("mocks relative modules with only a default export", async t => {
+	const { message } = await tq.replace<typeof import("#fixtures/default-export")>({
+		modulePath: "#fixtures/default-export",
+		importMeta: import.meta,
+		localMocks: {
+			"./greet.ts": {
+				"./name.ts": { name: "mocked" },
+			},
+		},
+	});
+
+	t.is(message, "hello mocked");
+});
+
+test("direct replacements take precedence over nested relative mocks", async t => {
+	const { other } = await tq.replace<typeof import("#fixtures/imports")>({
+		modulePath: "#fixtures/imports",
+		importMeta: import.meta,
+		localMocks: {
+			"./bar.ts": {
+				"./nested/other.ts": { other: tq.returns("nested") },
+				"other": tq.returns("direct"),
+			},
+		},
+	});
+
+	t.is(other(), "direct");
+});
+
+test("passes non-plain relative mock values through", async t => {
+	class FooMock {
+		foo = { name: "not-foo" };
+	}
+
+	const { foo } = await tq.replace<typeof import("#fixtures/imports")>({
+		modulePath: "#fixtures/imports",
+		importMeta: import.meta,
+		localMocks: {
+			"./foo.ts": new FooMock(),
+		},
+	});
+
+	t.is(foo.name, "not-foo");
+});
+
+test("preserves object identities in nested mocks", async t => {
+	const replacement = { text: "replacement" };
+
+	const { message } = await tq.replace<typeof import("#fixtures/chain")>({
+		modulePath: "#fixtures/chain",
+		importMeta: import.meta,
+		localMocks: {
+			"./mid.ts": {
+				"#fixtures/default-export": {
+					"./greet.ts": tq.spy(),
+					"message": replacement,
+				},
+			},
+		},
+	});
+
+	t.is(message as any, replacement);
+});
+
 test("preserves object identities", async t => {
 	const replacement = { name: "not-foo" };
 
