@@ -43,6 +43,6 @@ export const explain = (fn: AnyFunction): Explanation => {
 		callCount: calls.length,
 		called: calls.length > 0,
 		calls,
-		flatCalls: args.flat(Infinity),
+		flatCalls: args.flat(),
 	};
 };

@@ -23,7 +23,7 @@ export const objectForEach = (object: UnknownRecord, callback: ObjectForEachCall
 		callback(key, value);
 
 		if (isPlainObject(value)) {
-			if (seen.has(value)) {
+			if (object === value || seen.has(value)) {
 				continue;
 			}
 
@@ -35,7 +35,7 @@ export const objectForEach = (object: UnknownRecord, callback: ObjectForEachCall
 			continue;
 		}
 
-		const mapArray = (array: unknown[]) => {
+		const traverseArray = (array: unknown[]) => {
 			if (seen.has(array)) {
 				return;
 			}
@@ -43,14 +43,14 @@ export const objectForEach = (object: UnknownRecord, callback: ObjectForEachCall
 			seen.add(array);
 
 			for (const element of array) {
-				if (isPlainObject(element)) {
+				if (element !== object && isPlainObject(element) && !seen.has(element)) {
 					objectForEach(element, callback, seen);
 				} else if (Array.isArray(element)) {
-					mapArray(element);
+					traverseArray(element);
 				}
 			}
 		};
 
-		mapArray(value);
+		traverseArray(value);
 	}
 };
