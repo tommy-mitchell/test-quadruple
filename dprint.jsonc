@@ -1,4 +1,7 @@
 {
-	"includes": ["**/*.{js,ts,json,jsonc,yml,markdown}"],
+	"includes": ["**/*.{js,ts,json,jsonc,yml,md}"],
 	"extends": ["npm:@tommy-mitchell/configs/dprint"],
+	"markdown": {
+		"codeBlock.skipFormat": true,
+	},
 }

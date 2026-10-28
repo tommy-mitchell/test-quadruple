@@ -71,7 +71,7 @@ export type ReplaceOptions = {
  * import { match, P } from "ts-pattern";
  * import * as tq from "test-quadruple";
  *
- * const { program } = await tq.replace<typeof import('./program.js')>({
+ * const { program } = await tq.replace<typeof import("./program.js")>({
  *   modulePath: "./program.js",
  *   importMeta: import.meta,
  *   localMocks: {
