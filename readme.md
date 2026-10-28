@@ -43,7 +43,7 @@ test("test-quadrule", async t => {
           tq.returns("Hello, world!"),
           tq.returns("lorem ipsum"),
         ]),
-        baz: tq.mock<Baz>({
+        "./baz.js": tq.mock<typeof import("./baz.js")>({
           bizz: "buzz",
         }),
       },
