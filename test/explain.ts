@@ -1,7 +1,7 @@
 import test from "ava";
+import { forEachObject } from "for-each-obj";
 import { explain } from "#src/features/explain.ts";
 import { spy } from "#src/features/spy.ts";
-import { objectForEach } from "#src/helpers/utils.ts";
 
 test("gets details of a spy", t => {
 	const fn = spy();
@@ -14,16 +14,16 @@ test("gets details of a spy", t => {
 	});
 
 	fn(1, 2);
-	fn([3, 4]);
+	fn([3, 4], 5);
 
 	t.like(explain(fn), {
 		callCount: 2,
 		called: true,
 		calls: [
 			{ arguments: [1, 2] },
-			{ arguments: [[3, 4]] },
+			{ arguments: [[3, 4], 5] },
 		],
-		flatCalls: [1, 2, [3, 4]],
+		flatCalls: [1, 2, [3, 4], 5],
 	});
 });
 
@@ -71,14 +71,14 @@ test("handles circular references", t => {
 	fixture["circular"] = fixture;
 
 	const fn = spy<() => void>();
-	objectForEach(fixture, fn);
+	forEachObject(fixture, fn);
 
 	// dprint-ignore
 	t.deepEqual(explain(fn).flatCalls, [
-		"array", array,
-			"one", 1,
-		"two", 2,
-		"array2", array,
-		"circular", fixture,
+		"array", array, fixture,
+			"one", 1, array[0],
+		"two", 2, fixture,
+		"array2", array, fixture,
+		"circular", fixture, fixture
 	]);
 });

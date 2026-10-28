@@ -46,15 +46,15 @@ test("fixes relative module IDs", async t => {
 				"#baz": {
 					baz: tq.spy(),
 				},
+				"./nested/other.ts": {
+					other: tq.spy(),
+				},
 			},
 			"#mrowki": {
 				log: { info: tq.spy() },
 			},
 			"node:process": {
 				argv: ["1", "2", "3"],
-			},
-			"./nested/other.ts": {
-				other: tq.spy(),
 			},
 		},
 	});
@@ -152,5 +152,3 @@ test("strict overrides modules", async t => {
 	t.is(argv as any, undefined);
 	t.like(tq.explain(exit), { called: false });
 });
-
-test.todo("preserves object identities");

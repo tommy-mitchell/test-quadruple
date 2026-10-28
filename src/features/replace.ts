@@ -1,39 +1,42 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
+import { forEachObjectAsync } from "for-each-obj";
 import type { UnknownRecord as Replacement } from "type-fest";
-import { groupByRelative, isPlainObject, isRelative } from "#src/helpers/utils.ts";
+import { groupByRelative, isPlainObject, isRelativeOrSubpath } from "#src/helpers/utils.ts";
 
 type Replacements = Replacement & { global?: Replacement; };
 
 /** Turn all relative module paths into absolute paths with mocks applied. */
-const fixRelativeMocks = async (mocks: Replacement, importMeta: ImportMeta, modulePath: string) => (Promise.all(
-	Object.keys(mocks).map(async (key) => {
-		if (!isRelative(key)) {
+const fixRelativeMocks = async (mocks: Replacement, importMeta: ImportMeta, modulePath: string) => (
+	forEachObjectAsync(mocks, async (key, value, current) => {
+		if (typeof key !== "string" || !isRelativeOrSubpath(key)) {
 			return;
 		}
 
-		const resolvedPath = path.resolve(path.dirname(modulePath), key);
+		const resolvedPath = key.startsWith("#")
+			? fileURLToPath(importMeta.resolve(key))
+			: path.resolve(path.dirname(modulePath), key);
 
-		if (isPlainObject(mocks[key])) {
-			const [hasNestedRelatives, nestedRelatives, replacements] = groupByRelative(mocks[key]);
+		if (isPlainObject(value)) {
+			const [hasNested, nested, replacements] = groupByRelative(value);
 
-			if (hasNestedRelatives) {
-				await fixRelativeMocks(nestedRelatives, importMeta, resolvedPath);
-				mocks[resolvedPath] = {
-					...await esmock(resolvedPath, importMeta.url, nestedRelatives),
-					...replacements,
-				};
+			if (hasNested) {
+				await fixRelativeMocks(nested, importMeta, resolvedPath);
+				const mocked = await esmock<unknown>(resolvedPath, importMeta.url, nested);
+				const replacement = isPlainObject(mocked) ? mocked : { default: mocked };
+
+				current[resolvedPath] = { ...replacement, ...replacements };
 			} else {
-				mocks[resolvedPath] = mocks[key];
+				current[resolvedPath] = value;
 			}
 		} else {
-			mocks[resolvedPath] = mocks[key];
+			current[resolvedPath] = value;
 		}
 
-		delete mocks[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
-	}),
-));
+		delete current[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
+	})
+);
 
 /** Maps global scope mocks to `esmock`'s format. */
 const mockGlobalScope = (mocks: Replacements) => {
