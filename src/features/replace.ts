@@ -1,23 +1,42 @@
 import path from "node:path";
 import { fileURLToPath } from "node:url";
 import esmock from "esmock";
+import { forEachObjectAsync } from "for-each-obj";
 import type { UnknownRecord as Replacement } from "type-fest";
-import { isRelative } from "#src/helpers/utils.ts";
+import { groupByRelative, isPlainObject, isRelativeOrSubpath } from "#src/helpers/utils.ts";
 
 type Replacements = Replacement & { global?: Replacement; };
 
-/** Turns all relative module paths into absolute paths. */
-const fixRelativePaths = (mocks: Replacements, modulePath: string) => {
-	for (const key of Object.keys(mocks)) {
-		if (!isRelative(key)) {
-			continue;
+/** Turn all relative module paths into absolute paths with mocks applied. */
+const fixRelativeMocks = async (mocks: Replacement, importMeta: ImportMeta, modulePath: string) => (
+	forEachObjectAsync(mocks, async (key, value, current) => {
+		if (typeof key !== "string" || !isRelativeOrSubpath(key)) {
+			return;
 		}
 
-		const resolvedPath = path.resolve(path.dirname(modulePath), key);
-		mocks[resolvedPath] = mocks[key];
-		delete mocks[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
-	}
-};
+		const resolvedPath = key.startsWith("#")
+			? fileURLToPath(importMeta.resolve(key))
+			: path.resolve(path.dirname(modulePath), key);
+
+		if (isPlainObject(value)) {
+			const [hasNested, nested, replacements] = groupByRelative(value);
+
+			if (hasNested) {
+				await fixRelativeMocks(nested, importMeta, resolvedPath);
+				const mocked = await esmock<unknown>(resolvedPath, importMeta.url, nested);
+				const replacement = isPlainObject(mocked) ? mocked : { default: mocked };
+
+				current[resolvedPath] = { ...replacement, ...replacements };
+			} else {
+				current[resolvedPath] = value;
+			}
+		} else {
+			current[resolvedPath] = value;
+		}
+
+		delete current[key]; // eslint-disable-line @typescript-eslint/no-dynamic-delete
+	})
+);
 
 /** Maps global scope mocks to `esmock`'s format. */
 const mockGlobalScope = (mocks: Replacements) => {
@@ -92,7 +111,7 @@ export const replace = async <ReplacementType>({
 
 	// Resolve module path in case of subpath imports
 	const absolutePath = fileURLToPath(importMeta.resolve(modulePath));
-	fixRelativePaths(localMocks, absolutePath);
+	await fixRelativeMocks(localMocks, importMeta, absolutePath);
 
 	mockGlobalScope(localMocks);
 	mockGlobalScope(globalMocks);

@@ -8,49 +8,25 @@ export const arrify = <T>(value: T | T[], ...rest: T[]): T[] => ([
 ].filter(Boolean));
 
 /** Returns true if the given path is relative. */
-export const isRelative = (value: string): boolean => !path.isAbsolute(value) && value.startsWith(".");
+const isRelative = (value: string): boolean => !path.isAbsolute(value) && value.startsWith(".");
 
-const isPlainObject = (object: unknown): object is UnknownRecord => (
-	Boolean(object) && typeof object === "object"
-	&& (Object.getPrototypeOf(object) === null || Object.getPrototypeOf(Object.getPrototypeOf(object)) === null)
-);
+/** Returns true if the given path is relative or a subpath import. */
+export const isRelativeOrSubpath = (value: string): boolean => isRelative(value) || value.startsWith("#");
 
-type ObjectForEachCallback = (key: string, value: unknown) => void;
+type GroupByRelativeResult = [hasRelative: boolean, relative: Record<string, unknown>, other: Record<string, unknown>];
 
-/** Deeply traverses an object and its nested objects/arrays, calling the given `callback` for each entry. */
-export const objectForEach = (object: UnknownRecord, callback: ObjectForEachCallback, seen = new WeakSet()) => {
-	for (const [key, value] of Object.entries(object)) {
-		callback(key, value);
+/** Groups object keys by whether they are module IDs that need resolving (relative paths or subpath imports). */
+export const groupByRelative = (object: Record<string, unknown>): GroupByRelativeResult => {
+	const grouped = Object.groupBy(Object.entries(object), ([key]) => isRelativeOrSubpath(key) ? "relative" : "other");
 
-		if (isPlainObject(value)) {
-			if (object === value || seen.has(value)) {
-				continue;
-			}
-
-			seen.add(value);
-			objectForEach(value, callback, seen);
-		}
-
-		if (!Array.isArray(value)) {
-			continue;
-		}
-
-		const traverseArray = (array: unknown[]) => {
-			if (seen.has(array)) {
-				return;
-			}
-
-			seen.add(array);
-
-			for (const element of array) {
-				if (element !== object && isPlainObject(element) && !seen.has(element)) {
-					objectForEach(element, callback, seen);
-				} else if (Array.isArray(element)) {
-					traverseArray(element);
-				}
-			}
-		};
-
-		traverseArray(value);
-	}
+	return [
+		Boolean(grouped.relative),
+		Object.fromEntries(grouped.relative ?? []),
+		Object.fromEntries(grouped.other ?? []),
+	];
 };
+
+export const isPlainObject = (object: unknown): object is UnknownRecord => (
+	typeof object === "object" && object !== null
+	&& (Object.getPrototypeOf(object) === null || Object.getPrototypeOf(object) === Object.prototype)
+);
